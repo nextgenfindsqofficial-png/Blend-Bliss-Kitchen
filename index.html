@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blend & Bliss Kitchen | Fresh Recipes & Culinary Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+
+    <!-- Firebase Realtime Database Compat SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        kitchen: {
+                            cream: '#FAF6F0',
+                            charcoal: '#1A1817',
+                            surface: '#24211F',
+                            border: '#3A3532',
+                            terracotta: '#E05A2B',
+                            leaf: '#2E7D32',
+                            amber: '#EAB308'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-nav {
+            background: rgba(26, 24, 23, 0.88);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-kitchen-charcoal text-stone-100 font-sans min-h-screen flex flex-col justify-between selection:bg-kitchen-terracotta selection:text-white">
+
+    <!-- NAVBAR -->
+    <header class="fixed top-0 left-0 w-full z-40 glass-nav border-b border-kitchen-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-kitchen-terracotta to-kitchen-amber flex items-center justify-center text-white font-serif font-bold text-xl shadow-lg shadow-kitchen-terracotta/20 group-hover:scale-105 transition-transform">
+                    B&B
+                </div>
+                <div>
+                    <span class="block font-serif text-lg sm:text-xl font-bold text-white leading-none group-hover:text-kitchen-amber transition-colors">Blend & Bliss</span>
+                    <span class="block text-[10px] uppercase tracking-[0.2em] text-stone-400 mt-1">Kitchen & Recipe Hub</span>
+                </div>
+            </a>
+
+            <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-stone-300">
+                <a href="#recipes" class="hover:text-kitchen-amber transition-colors">Recipes</a>
+                <a href="#categories" class="hover:text-kitchen-amber transition-colors">Categories</a>
+                <a href="#ad-foods-partner" class="hover:text-kitchen-amber transition-colors">A&D Foods Shop</a>
+            </nav>
+
+            <div class="flex items-center gap-2.5">
+                <span id="dbStatusBadge" class="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-semibold px-3 py-1.5 rounded-full border border-kitchen-border bg-kitchen-surface text-stone-300">
+                    <span id="dbStatusDot" class="w-2 h-2 rounded-full bg-amber-400"></span>
+                    <span id="dbStatusText">Local Mode</span>
+                </span>
+                <button onclick="openAdminModal()" class="flex items-center gap-2 text-xs font-semibold bg-kitchen-surface hover:bg-stone-700 text-stone-200 px-3.5 py-2.5 rounded-xl border border-kitchen-border transition-all cursor-pointer">
+                    <i class="fa-solid fa-sliders text-kitchen-amber"></i>
+                    <span>Admin Studio</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="pt-32 pb-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+        <div class="grid lg:grid-cols-12 gap-10 items-center">
+            <div class="lg:col-span-7 space-y-6">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-kitchen-terracotta/15 border border-kitchen-terracotta/30 text-kitchen-terracotta text-xs font-bold tracking-wide uppercase">
+                    <i class="fa-solid fa-blender"></i>
+                    <span>Fresh Drinks, Homestyle Meals & Daily Cravings</span>
+                </div>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-white leading-[1.12]">
+                    Sip Fresh. Cook Bold. <span class="text-transparent bg-clip-text bg-gradient-to-r from-kitchen-terracotta to-kitchen-amber">Shop Authentic Favorites.</span>
+                </h1>
+                <p class="text-stone-300 text-base sm:text-lg max-w-2xl leading-relaxed">
+                    Explore easy-to-follow juice, smoothie, snack, and traditional recipes—and when you want ready-made Sri Lankan favorites or kitchen essentials, jump straight to <strong class="text-white">A&D Foods</strong>.
+                </p>
+                <div class="flex flex-wrap gap-4 pt-2">
+                    <a href="#recipes" class="bg-kitchen-terracotta hover:bg-orange-600 text-white font-bold px-6 py-3.5 rounded-xl transition-all shadow-lg shadow-kitchen-terracotta/25 flex items-center gap-2 text-sm">
+                        <span>Browse Recipes</span>
+                        <i class="fa-solid fa-arrow-down text-xs"></i>
+                    </a>
+                    <a href="https://nextgenfindsqofficial-png.github.io/A-D/" target="_blank" rel="noopener noreferrer" class="bg-kitchen-surface hover:bg-stone-700 text-white font-semibold px-6 py-3.5 rounded-xl border border-kitchen-border transition-all flex items-center gap-2 text-sm">
+                        <i class="fa-solid fa-store text-kitchen-amber"></i>
+                        <span>Visit A&D Foods</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs text-stone-400"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5">
+                <div class="relative rounded-3xl overflow-hidden border border-kitchen-border bg-kitchen-surface shadow-2xl">
+                    <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1000&q=80" alt="Fresh Culinary Bowl and Drinks" class="w-full h-80 sm:h-96 object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-kitchen-charcoal via-kitchen-charcoal/30 to-transparent"></div>
+                    <div class="absolute bottom-5 left-5 right-5 bg-kitchen-charcoal/90 backdrop-blur-md border border-kitchen-border rounded-2xl p-4 flex items-center justify-between gap-4">
+                        <div>
+                            <p class="text-xs uppercase tracking-wider text-kitchen-amber font-bold">Traffic → Sales Funnel</p>
+                            <p class="text-sm font-semibold text-white mt-0.5">Recipes + Direct A&D Foods Links</p>
+                        </div>
+                        <a href="https://nextgenfindsqofficial-png.github.io/A-D/" target="_blank" rel="noopener noreferrer" class="shrink-0 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3.5 py-2.5 rounded-xl transition-colors">
+                            Shop Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FILTER & SEARCH BAR -->
+    <section id="categories" class="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full pb-8">
+        <div class="bg-kitchen-surface border border-kitchen-border rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+            <div id="categoryButtons" class="flex flex-wrap gap-2">
+                <button onclick="setCategory('All')" data-cat="All" class="cat-btn px-4 py-2 rounded-xl text-xs font-bold bg-kitchen-terracotta text-white transition-all cursor-pointer">All Recipes</button>
+                <button onclick="setCategory('Fresh Juices')" data-cat="Fresh Juices" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-kitchen-charcoal text-stone-300 hover:text-white border border-kitchen-border transition-all cursor-pointer">Fresh Juices</button>
+                <button onclick="setCategory('Smoothies & Bowls')" data-cat="Smoothies & Bowls" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-kitchen-charcoal text-stone-300 hover:text-white border border-kitchen-border transition-all cursor-pointer">Smoothies & Bowls</button>
+                <button onclick="setCategory('Sri Lankan Meals')" data-cat="Sri Lankan Meals" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-kitchen-charcoal text-stone-300 hover:text-white border border-kitchen-border transition-all cursor-pointer">Sri Lankan Meals</button>
+                <button onclick="setCategory('Quick Snacks')" data-cat="Quick Snacks" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-kitchen-charcoal text-stone-300 hover:text-white border border-kitchen-border transition-all cursor-pointer">Quick Snacks</button>
+            </div>
+
+            <div class="relative md:w-72">
+                <i class="fa-solid fa-magnifying-glass text-stone-400 text-xs absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                <input type="text" id="searchInput" oninput="renderRecipes()" placeholder="Search recipe or ingredient..." class="w-full bg-kitchen-charcoal border border-kitchen-border rounded-xl pl-9 pr-4 py-2.5 text-xs sm:text-sm text-white placeholder-stone-500 focus:outline-none focus:border-kitchen-amber">
+            </div>
+        </div>
+    </section>
+
+    <!-- RECIPES GRID -->
+    <section id="recipes" class="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full pb-20">
+        <div class="flex items-end justify-between mb-8">
+            <div>
+                <h2 class="text-2xl sm:text-3xl font-serif font-bold text-white">Latest Recipes</h2>
+                <p class="text-stone-400 text-xs sm:text-sm mt-1">Click any recipe to read steps and shop featured items from A&D Foods.</p>
+            </div>
+            <span id="recipeCount" class="text-xs font-semibold text-stone-400"></span>
+        </div>
+
+        <div id="recipesGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-7"></div>
+    </section>
+
+    <!-- A&D FOODS PROMO BANNER -->
+    <section id="ad-foods-partner" class="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full pb-20">
+        <div class="rounded-3xl bg-gradient-to-r from-amber-950/80 via-kitchen-surface to-orange-950/70 border border-kitchen-border p-6 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="space-y-2 text-center md:text-left">
+                <span class="text-[11px] font-bold uppercase tracking-widest text-kitchen-amber">Partner Kitchen & Store</span>
+                <h3 class="text-2xl sm:text-3xl font-serif font-bold text-white">Craving Fresh Idiyappam, Kiribath & Meals?</h3>
+                <p class="text-stone-300 text-sm max-w-xl">Order directly from our main storefront at <span class="text-white font-medium">A&D Foods</span> whenever you want authentic food made fresh.</p>
+            </div>
+            <a href="https://nextgenfindsqofficial-png.github.io/A-D/" target="_blank" rel="noopener noreferrer" class="shrink-0 bg-gradient-to-r from-kitchen-terracotta to-amber-500 hover:opacity-95 text-white font-bold px-6 py-3.5 rounded-xl shadow-lg transition-all flex items-center gap-2 text-sm">
+                <span>Open A&D Foods Website</span>
+                <i class="fa-solid fa-arrow-right text-xs"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-black/40 border-t border-kitchen-border py-10 px-4 text-center text-xs text-stone-400 space-y-2">
+        <p class="font-serif text-base font-bold text-stone-200">Blend & Bliss Kitchen</p>
+        <p>© 2026 Blend & Bliss Kitchen • Connected with <a href="https://nextgenfindsqofficial-png.github.io/A-D/" target="_blank" rel="noopener noreferrer" class="text-kitchen-amber hover:underline">A&D Foods</a></p>
+    </footer>
+
+    <!-- RECIPE READER MODAL -->
+    <div id="recipeModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" onclick="if(event.target === this) closeRecipeModal()">
+        <div class="bg-kitchen-surface border border-kitchen-border rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+            <div class="relative h-60 sm:h-72">
+                <img id="modalImg" src="" alt="" class="w-full h-full object-cover">
+                <button onclick="closeRecipeModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/70 hover:bg-black text-white flex items-center justify-center cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <span id="modalCategory" class="absolute bottom-4 left-4 bg-kitchen-terracotta text-white text-xs font-bold px-3 py-1 rounded-full"></span>
+            </div>
+
+            <div class="p-6 sm:p-8 space-y-6">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <h3 id="modalTitle" class="text-2xl sm:text-3xl font-serif font-bold text-white"></h3>
+                    <span id="modalPrepTime" class="text-xs font-semibold bg-kitchen-charcoal border border-kitchen-border px-3 py-1.5 rounded-xl text-stone-300"></span>
+                </div>
+
+                <p id="modalSummary" class="text-stone-300 text-sm leading-relaxed"></p>
+
+                <div class="grid sm:grid-cols-2 gap-6">
+                    <div class="bg-kitchen-charcoal/80 border border-kitchen-border rounded-2xl p-4">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-kitchen-amber mb-3">Ingredients</h4>
+                        <ul id="modalIngredients" class="space-y-2 text-xs sm:text-sm text-stone-200 list-disc list-inside"></ul>
+                    </div>
+                    <div class="bg-kitchen-charcoal/80 border border-kitchen-border rounded-2xl p-4">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-kitchen-amber mb-3">Preparation Steps</h4>
+                        <ol id="modalSteps" class="space-y-2.5 text-xs sm:text-sm text-stone-200 list-decimal list-inside"></ol>
+                    </div>
+                </div>
+
+                <!-- CONVERSION CTA -->
+                <div class="rounded-2xl bg-gradient-to-r from-kitchen-terracotta/20 to-amber-500/20 border border-kitchen-terracotta/40 p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div>
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-kitchen-amber">Recommended Store Link</p>
+                        <p id="modalShopNote" class="text-sm font-semibold text-white mt-0.5">Order fresh items & specials from A&D Foods</p>
+                    </div>
+                    <a id="modalShopLink" href="https://nextgenfindsqofficial-png.github.io/A-D/" target="_blank" rel="noopener noreferrer" class="shrink-0 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm px-5 py-3 rounded-xl transition-all flex items-center gap-2">
+                        <span id="modalShopCtaText">Shop at A&D Foods</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN STUDIO MODAL -->
+    <div id="adminModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" onclick="if(event.target === this) closeAdminModal()">
+        <div class="bg-kitchen-surface border border-kitchen-border rounded-3xl max-w-3xl w-full max-h-[90vh] flex flex-col overflow-hidden shadow-2xl">
+            <div class="px-6 py-4 border-b border-kitchen-border flex items-center justify-between bg-kitchen-charcoal/60">
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-kitchen-set text-kitchen-amber"></i>
+                    <h3 class="font-bold text-white text-base">Blend & Bliss Admin Studio</h3>
+                </div>
+                <button onclick="closeAdminModal()" class="text-stone-400 hover:text-white p-1.5 rounded-lg cursor-pointer">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto space-y-6">
+                <!-- LOGIN -->
+                <div id="adminLoginBox" class="max-w-md mx-auto py-6 space-y-4">
+                    <p class="text-sm text-stone-300">Enter your admin password to add, edit, or delete recipes:</p>
+                    <input type="password" id="adminPassInput" placeholder="Admin Password" class="w-full bg-kitchen-charcoal border border-kitchen-border rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-kitchen-amber">
+                    <p id="adminPassError" class="text-xs text-rose-400 hidden">Incorrect password. Default demo password is: BlendBliss@123#</p>
+                    <button onclick="loginAdmin()" class="w-full bg-kitchen-terracotta hover:bg-orange-600 text-white font-bold py-3 rounded-xl text-sm transition-all cursor-pointer">
+                        Unlock Admin Studio
+                    </button>
+                </div>
+
+                <!-- EDITOR & LIST -->
+                <div id="adminDashboardBox" class="hidden space-y-8">
+                    <form onsubmit="saveRecipeForm(event)" class="bg-kitchen-charcoal/80 border border-kitchen-border rounded-2xl p-5 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h4 id="formHeading" class="font-bold text-sm text-white">Add New Recipe</h4>
+                            <button type="button" onclick="resetRecipeForm()" class="text-xs text-stone-400 hover:text-white underline cursor-pointer">Clear Form</button>
+                        </div>
+                        <input type="hidden" id="editRecipeId">
+
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs text-stone-400 mb-1">Recipe Title *</label>
+                                <input type="text" id="recTitle" required placeholder="e.g., Tropical Pineapple & Mint Cooler" class="w-full bg-kitchen-surface border border-kitchen-border rounded-xl px-3.5 py-2.5 text-sm text-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-stone-400 mb-1">Category *</label>
+                                <select id="recCategory" class="w-full bg-kitchen-surface border border-kitchen-border rounded-xl px-3.5 py-2.5 text-sm text-white">
+                                    <option value="Fresh Juices">Fresh Juices</option>
+                                    <option value="Smoothies & Bowls">Smoothies & Bowls</option>
+                                    <option value="Sri Lankan Meals">Sri Lankan Meals</option>
+                                    <option value="Quick Snacks">Quick Snacks</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs text-stone-400 mb-1">Prep Time</label>
+                                <input type="text" id="recPrepTime" placeholder="e.g., 10 mins" class="w-full bg-kitchen-surface border border-kitchen-border rounded-xl px-3.5 py-2.5 text-sm text-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-stone-400 mb-1">Image URL</label>
+                                <input type="url" id="recImage" placeholder="https://..." class="w-full bg-kitchen-surface border border-kitchen-border rounded-xl px-3.5 py-2.5 text-sm text-white">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs text-stone-400 mb-1">Short Summary *</label>
+                            <textarea id="recSummary" rows="2" required placeholder="Brief description of the taste and vibe..." class="w-full bg-kitchen-surface border border-kitchen-border rounded-xl px-3.5 py-2.5 text-sm text-white"></textarea>
+                        </div>
+
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs text-stone-400 mb-1">Ingredients (one per line) *</label>
+                                <textarea id="recIngredients" rows="4" required placeholder="2 cups fresh pineapple&#10;10 mint leaves&#10;1 tbsp lime juice" class="w-full bg-kitchen-surface border border-kitchen-border rounded-xl px-3.5 py-2.5 text-sm text-white"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-stone-400 mb-1">Steps (one per line) *</label>
+                                <textarea id="recSteps" rows="4" required placeholder="Chop pineapple into chunks&#10;Blend with cold water and mint&#10;Serve chilled" class="w-full bg-kitchen-surface border border-kitchen-border rounded-xl px-3.5 py-2.5 text-sm text-white"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="grid sm:grid-cols-2 gap-4 pt-2 border-t border-kitchen-border">
+                            <div>
+                                <label class="block text-xs text-kitchen-amber font-semibold mb-1">A&D Foods Link (Sales Funnel)</label>
+                                <input type="url" id="recShopUrl" value="https://nextgenfindsqofficial-png.github.io/A-D/" class="w-full bg-kitchen-surface border border-kitchen-border rounded-xl px-3.5 py-2.5 text-sm text-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-kitchen-amber font-semibold mb-1">Button Label</label>
+                                <input type="text" id="recShopLabel" value="Order Fresh from A&D Foods" class="w-full bg-kitchen-surface border border-kitchen-border rounded-xl px-3.5 py-2.5 text-sm text-white">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-xl text-sm transition-all cursor-pointer">
+                            Save Recipe
+                        </button>
+                    </form>
+
+                    <div class="space-y-3">
+                        <h4 class="font-bold text-sm text-white">Published Recipes</h4>
+                        <div id="adminRecipeList" class="space-y-2.5"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ADMIN_PASSWORD = "BlendBliss@123#";
+        const DEFAULT_SHOP_URL = "https://nextgenfindsqofficial-png.github.io/A-D/";
+        const FALLBACK_IMG = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80";
+        const LOCAL_STORAGE_KEY = "blend_and_bliss_recipes_v1";
+
+        // Paste your own Blend & Bliss Firebase Realtime Database config here when ready
+        const firebaseConfig = {
+            apiKey: "",
+            authDomain: "",
+            databaseURL: "",
+            projectId: "",
+            storageBucket: "",
+            messagingSenderId: "",
+            appId: ""
+        };
+
+        const defaultRecipes = [
+            {
+                id: 101,
+                title: "Golden Mango & Passionfruit Sparkler",
+                category: "Fresh Juices",
+                prepTime: "8 mins",
+                image: "https://images.unsplash.com/photo-1546173159-315724a31696?auto=format&fit=crop&w=800&q=80",
+                summary: "Sweet ripe mango balanced with tangy passionfruit pulp and chilled sparkling water.",
+                ingredients: ["1 ripe mango, cubed", "2 passionfruits (pulp)", "1 cup chilled sparkling water", "Ice cubes & honey to taste"],
+                steps: ["Blend mango cubes until smooth.", "Strain or stir in fresh passionfruit pulp.", "Pour over ice and top with chilled sparkling water."],
+                shopUrl: DEFAULT_SHOP_URL,
+                shopLabel: "Explore A&D Foods Menu"
+            },
+            {
+                id: 102,
+                title: "Homestyle String Hopper Breakfast Bowl",
+                category: "Sri Lankan Meals",
+                prepTime: "20 mins",
+                image: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80",
+                summary: "Delicate steamed string hoppers paired with rich coconut gravy, sambol, and spiced curry.",
+                ingredients: ["Fresh string hoppers", "Coconut milk & curry leaves", "Grated coconut, chili & lime for sambol", "Dhal or chicken curry"],
+                steps: ["Steam string hoppers until warm and soft.", "Simmer spiced coconut gravy gently.", "Serve hot with sambol and curry on the side."],
+                shopUrl: DEFAULT_SHOP_URL,
+                shopLabel: "Order Idiyappam from A&D Foods"
+            },
+            {
+                id: 103,
+                title: "Berry Oat Morning Bliss Bowl",
+                category: "Smoothies & Bowls",
+                prepTime: "10 mins",
+                image: "https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?auto=format&fit=crop&w=800&q=80",
+                summary: "Creamy blended berry oat base topped with banana slices, seeds, and crunchy granola.",
+                ingredients: ["1/2 cup rolled oats", "1 cup mixed berries", "1 frozen banana", "Splash of milk or yogurt"],
+                steps: ["Blend oats, berries, banana, and milk until thick.", "Spoon into a bowl.", "Top with fruit slices and granola."],
+                shopUrl: DEFAULT_SHOP_URL,
+                shopLabel: "Visit A&D Foods"
+            },
+            {
+                id: 104,
+                title: "Crispy Spiced Snack Bites",
+                category: "Quick Snacks",
+                prepTime: "15 mins",
+                image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80",
+                summary: "Golden crunchy tea-time bites packed with savory herbs and warm spices.",
+                ingredients: ["Savory dough or pastry squares", "Chopped onions, herbs & spices", "Oil for shallow or air frying"],
+                steps: ["Mix savory filling ingredients evenly.", "Shape or fold cleanly.", "Cook until golden crisp and serve warm."],
+                shopUrl: DEFAULT_SHOP_URL,
+                shopLabel: "Shop Specials at A&D Foods"
+            }
+        ];
+
+        let recipes = [];
+        let activeCategory = "All";
+        let dbRef = null;
+
+        function normalizeRecipes(raw) {
+            if (!raw) return [];
+            const arr = Array.isArray(raw) ? raw : Object.values(raw);
+            return arr.filter(Boolean);
+        }
+
+        function saveLocal(list) {
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(list));
+        }
+
+        function loadLocal() {
+            try {
+                const saved = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
+                if (Array.isArray(saved) && saved.length > 0) return saved;
+            } catch (_) {}
+            saveLocal(defaultRecipes);
+            return [...defaultRecipes];
+        }
+
+        function persistRecipes(updatedList) {
+            recipes = updatedList;
+            saveLocal(recipes);
+            if (dbRef) {
+                dbRef.set(recipes);
+            } else {
+                renderRecipes();
+                renderAdminList();
+            }
+        }
+
+        function initDatabase() {
+            const hasFirebaseConfig = Boolean(firebaseConfig.apiKey && firebaseConfig.databaseURL);
+            const dot = document.getElementById("dbStatusDot");
+            const text = document.getElementById("dbStatusText");
+
+            if (hasFirebaseConfig && window.firebase) {
+                try {
+                    if (!firebase.apps.length) {
+                        firebase.initializeApp(firebaseConfig);
+                    }
+                    dbRef = firebase.database().ref("blendAndBliss/recipes");
+                    dot.className = "w-2 h-2 rounded-full bg-emerald-400";
+                    text.textContent = "Firebase Live";
+
+                    dbRef.on("value", (snapshot) => {
+                        const val = snapshot.val();
+                        if (val) {
+                            recipes = normalizeRecipes(val);
+                            saveLocal(recipes);
+                        } else {
+                            recipes = [...defaultRecipes];
+                            dbRef.set(recipes);
+                        }
+                        renderRecipes();
+                        renderAdminList();
+                    });
+                    return;
+                } catch (err) {
+                    console.warn("Firebase init fallback to local mode:", err);
+                }
+            }
+
+            dot.className = "w-2 h-2 rounded-full bg-amber-400";
+            text.textContent = "Local Demo Mode";
+            recipes = loadLocal();
+            renderRecipes();
+            renderAdminList();
+        }
+
+        function setCategory(category) {
+            activeCategory = category;
+            document.querySelectorAll(".cat-btn").forEach((btn) => {
+                const isSelected = btn.dataset.cat === category;
+                btn.className = isSelected
+                    ? "cat-btn px-4 py-2 rounded-xl text-xs font-bold bg-kitchen-terracotta text-white transition-all cursor-pointer"
+                    : "cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-kitchen-charcoal text-stone-300 hover:text-white border border-kitchen-border transition-all cursor-pointer";
+            });
+            renderRecipes();
+        }
+
+        function renderRecipes() {
+            const grid = document.getElementById("recipesGrid");
+            const countEl = document.getElementById("recipeCount");
+            const query = (document.getElementById("searchInput")?.value || "").trim().toLowerCase();
+
+            const filtered = recipes.filter((r) => {
+                const matchesCat = activeCategory === "All" || r.category === activeCategory;
+                const haystack = [
+                    r.title,
+                    r.category,
+                    r.summary,
+                    ...(r.ingredients || [])
+                ].join(" ").toLowerCase();
+                const matchesQuery = !query || haystack.includes(query);
+                return matchesCat && matchesQuery;
+            });
+
+            countEl.textContent = `${filtered.length} ${filtered.length === 1 ? "recipe" : "recipes"}`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full bg-kitchen-surface border border-kitchen-border rounded-2xl p-10 text-center text-stone-400 text-sm">No recipes matched your filter. Try another category or clear search.</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map((recipe) => `
+                <article class="bg-kitchen-surface border border-kitchen-border hover:border-stone-500 rounded-2xl overflow-hidden flex flex-col justify-between transition-all group">
+                    <div>
+                        <div onclick="openRecipeModal(${recipe.id})" class="h-48 overflow-hidden relative cursor-pointer">
+                            <img src="${(recipe.image || FALLBACK_IMG).trim()}" alt="${escapeHtml(recipe.title)}" onerror="this.src='${FALLBACK_IMG}'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                            <span class="absolute top-3 left-3 bg-black/75 backdrop-blur-sm text-white text-[11px] font-semibold px-3 py-1 rounded-full">${escapeHtml(recipe.category || "Recipe")}</span>
+                        </div>
+                        <div class="p-5 space-y-2.5">
+                            <div class="flex items-center justify-between text-[11px] text-stone-400">
+                                <span><i class="fa-regular fa-clock mr-1 text-kitchen-amber"></i>${escapeHtml(recipe.prepTime || "15 mins")}</span>
+                                <span>${(recipe.ingredients || []).length} ingredients</span>
+                            </div>
+                            <h3 onclick="openRecipeModal(${recipe.id})" class="font-serif text-xl font-bold text-white group-hover:text-kitchen-amber transition-colors cursor-pointer">${escapeHtml(recipe.title)}</h3>
+                            <p class="text-xs text-stone-300 leading-relaxed line-clamp-2">${escapeHtml(recipe.summary || "")}</p>
+                        </div>
+                    </div>
+
+                    <div class="px-5 pb-5 pt-2 flex items-center gap-2.5">
+                        <button onclick="openRecipeModal(${recipe.id})" class="flex-1 bg-kitchen-charcoal hover:bg-stone-700 text-white text-xs font-bold py-2.5 px-3 rounded-xl border border-kitchen-border transition-colors cursor-pointer">
+                            Read Recipe
+                        </button>
+                        <a href="${escapeAttr(recipe.shopUrl || DEFAULT_SHOP_URL)}" target="_blank" rel="noopener noreferrer" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-2.5 px-3.5 rounded-xl transition-colors flex items-center gap-1.5" title="Go to A&D Foods">
+                            <span>A&D Foods</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+                    </div>
+                </article>
+            `).join("");
+        }
+
+        function openRecipeModal(id) {
+            const recipe = recipes.find((r) => String(r.id) === String(id));
+            if (!recipe) return;
+
+            document.getElementById("modalImg").src = (recipe.image || FALLBACK_IMG).trim();
+            document.getElementById("modalImg").onerror = function () { this.src = FALLBACK_IMG; };
+            document.getElementById("modalCategory").textContent = recipe.category || "Recipe";
+            document.getElementById("modalTitle").textContent = recipe.title;
+            document.getElementById("modalPrepTime").textContent = recipe.prepTime || "15 mins";
+            document.getElementById("modalSummary").textContent = recipe.summary || "";
+
+            document.getElementById("modalIngredients").innerHTML = (recipe.ingredients || [])
+                .map((ing) => `<li>${escapeHtml(ing)}</li>`).join("");
+
+            document.getElementById("modalSteps").innerHTML = (recipe.steps || [])
+                .map((st) => `<li>${escapeHtml(st)}</li>`).join("");
+
+            const shopLink = document.getElementById("modalShopLink");
+            shopLink.href = recipe.shopUrl || DEFAULT_SHOP_URL;
+            document.getElementById("modalShopCtaText").textContent = recipe.shopLabel || "Shop at A&D Foods";
+
+            document.getElementById("recipeModal").classList.remove("hidden");
+        }
+
+        function closeRecipeModal() {
+            document.getElementById("recipeModal").classList.add("hidden");
+        }
+
+        function openAdminModal() {
+            document.getElementById("adminModal").classList.remove("hidden");
+            document.getElementById("adminPassInput").value = "";
+            document.getElementById("adminPassError").classList.add("hidden");
+        }
+
+        function closeAdminModal() {
+            document.getElementById("adminModal").classList.add("hidden");
+        }
+
+        function loginAdmin() {
+            const val = document.getElementById("adminPassInput").value;
+            if (val === ADMIN_PASSWORD) {
+                document.getElementById("adminLoginBox").classList.add("hidden");
+                document.getElementById("adminDashboardBox").classList.remove("hidden");
+                renderAdminList();
+            } else {
+                document.getElementById("adminPassError").classList.remove("hidden");
+            }
+        }
+
+        function resetRecipeForm() {
+            document.getElementById("formHeading").textContent = "Add New Recipe";
+            document.getElementById("editRecipeId").value = "";
+            document.getElementById("recTitle").value = "";
+            document.getElementById("recCategory").value = "Fresh Juices";
+            document.getElementById("recPrepTime").value = "";
+            document.getElementById("recImage").value = "";
+            document.getElementById("recSummary").value = "";
+            document.getElementById("recIngredients").value = "";
+            document.getElementById("recSteps").value = "";
+            document.getElementById("recShopUrl").value = DEFAULT_SHOP_URL;
+            document.getElementById("recShopLabel").value = "Order Fresh from A&D Foods";
+        }
+
+        function saveRecipeForm(event) {
+            event.preventDefault();
+            const editId = document.getElementById("editRecipeId").value;
+            const ingredients = document.getElementById("recIngredients").value
+                .split("\n").map((s) => s.trim()).filter(Boolean);
+            const steps = document.getElementById("recSteps").value
+                .split("\n").map((s) => s.trim()).filter(Boolean);
+
+            const payload = {
+                id: editId ? Number(editId) : Date.now(),
+                title: document.getElementById("recTitle").value.trim(),
+                category: document.getElementById("recCategory").value,
+                prepTime: document.getElementById("recPrepTime").value.trim() || "15 mins",
+                image: (document.getElementById("recImage").value || FALLBACK_IMG).trim(),
+                summary: document.getElementById("recSummary").value.trim(),
+                ingredients,
+                steps,
+                shopUrl: (document.getElementById("recShopUrl").value || DEFAULT_SHOP_URL).trim(),
+                shopLabel: (document.getElementById("recShopLabel").value || "Order Fresh from A&D Foods").trim()
+            };
+
+            let updated;
+            if (editId) {
+                updated = recipes.map((r) => (String(r.id) === String(editId) ? payload : r));
+            } else {
+                updated = [payload, ...recipes];
+            }
+
+            persistRecipes(updated);
+            resetRecipeForm();
+        }
+
+        function editRecipe(id) {
+            const r = recipes.find((item) => String(item.id) === String(id));
+            if (!r) return;
+            document.getElementById("formHeading").textContent = "Edit Recipe";
+            document.getElementById("editRecipeId").value = r.id;
+            document.getElementById("recTitle").value = r.title || "";
+            document.getElementById("recCategory").value = r.category || "Fresh Juices";
+            document.getElementById("recPrepTime").value = r.prepTime || "";
+            document.getElementById("recImage").value = r.image || "";
+            document.getElementById("recSummary").value = r.summary || "";
+            document.getElementById("recIngredients").value = (r.ingredients || []).join("\n");
+            document.getElementById("recSteps").value = (r.steps || []).join("\n");
+            document.getElementById("recShopUrl").value = r.shopUrl || DEFAULT_SHOP_URL;
+            document.getElementById("recShopLabel").value = r.shopLabel || "Order Fresh from A&D Foods";
+        }
+
+        function deleteRecipe(id) {
+            const updated = recipes.filter((item) => String(item.id) !== String(id));
+            persistRecipes(updated);
+        }
+
+        function renderAdminList() {
+            const list = document.getElementById("adminRecipeList");
+            if (!list) return;
+            list.innerHTML = recipes.map((r) => `
+                <div class="bg-kitchen-charcoal border border-kitchen-border rounded-xl p-3 flex items-center justify-between gap-3">
+                    <div class="min-w-0">
+                        <p class="text-sm font-bold text-white truncate">${escapeHtml(r.title)}</p>
+                        <p class="text-[11px] text-stone-400">${escapeHtml(r.category || "")} • ${escapeHtml(r.prepTime || "")}</p>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button onclick="editRecipe(${r.id})" class="text-xs bg-kitchen-surface hover:bg-stone-700 text-stone-200 px-3 py-1.5 rounded-lg border border-kitchen-border cursor-pointer">Edit</button>
+                        <button onclick="deleteRecipe(${r.id})" class="text-xs bg-rose-500/20 hover:bg-rose-600 text-rose-300 hover:text-white px-3 py-1.5 rounded-lg border border-rose-500/30 cursor-pointer">Delete</button>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function escapeHtml(str) {
+            return String(str || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function escapeAttr(str) {
+            return String(str || "").replace(/"/g, "&quot;");
+        }
+
+        initDatabase();
+    </script>
+</body>
+</html>
